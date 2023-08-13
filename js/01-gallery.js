@@ -31,22 +31,27 @@ function handlerSizeUp(event) {
     return;
   }
 
-  const currentProduct = event.target.closest('.gallery');
-  // Не зовсім розумію навіщо делегування на ul.gallery; як потім використати цю змінну currentProduct, якщо отримую data-source i alt через event.target
-
   const currentLink = event.target.dataset.source;
   const currentAlt = event.target.alt;
 
   const instance = basicLightbox.create(
-    `<img src="${currentLink}" alt="${currentAlt}" width="800" height="600">`
+    `<img src="${currentLink}" alt="${currentAlt}" width="800" height="600">`,
+    {
+      onShow: instance => {
+        container.addEventListener('keydown', handlerSizeDown);
+      },
+      onClose: instance => {
+        document.removeEventListener('keydown', handlerSizeDown);
+      },
+    }
   );
   instance.show();
-
-  container.addEventListener('keydown', handlerSizeDown);
 
   function handlerSizeDown(event) {
     if (event.code === 'Escape') {
       instance.close();
+      console.log('here');
+      // Дуже дякую за відео з поясненням, але я щиро не розумію як це зробити...
     }
   }
 }
